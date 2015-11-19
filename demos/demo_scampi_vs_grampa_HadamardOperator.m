@@ -1,7 +1,7 @@
 % In order to use this demo, the GAMP package (http://sourceforge.net/projects/gampmatlab/) must be installed and in the matlab path 
 
 % set the path to the folder containing the images
-pathImages = '~/Desktop/scampi/images/';
+pathImages = '/images/';
 
 % choice of the image
 N = 512^2; % size of image (power of two with the present Hadamard operator)

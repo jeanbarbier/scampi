@@ -48,7 +48,7 @@ while t <= opt.nb_iter
 
     % mse and convergence        
     if mod(t, opt.print) == 0
-        conv_ = mean(abs(var_mess_temp(1 : opt.Ntrue) - prior.var_mess(1 : opt.Ntrue) ) );    
+        conv_ = mean(abs(av_mess_temp - prior.av_mess) );    
         if (t > 0) & (conv_ < opt.conv)
             disp('converged'); 
             break; 

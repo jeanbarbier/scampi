@@ -1,4 +1,4 @@
-function [op, opSq, opT, opSqT, l, L, C, varargout] = createAugmentedOp(N, subrate, firstmode, varargin)
+function [op, opSq, opT, opSqT, l, L, C, varargout] = createAugmentedOp(N, subrate, firstMode, varargin)
 
 % Two possibilities for the measurement matrix used for the augmented operator : 1) a matrix F is given, 2) if not, a subsampled Hadamard fast operator is used (default).
 %
@@ -76,10 +76,17 @@ if nargin == 3
     opT = @(z) [MultSeededHadamardTranspose(z(1 : M), 1 / N, 1, 1, M, N, rp, fs, rp2) + matDiffsT(1 : N, :) * z(M + 1 : end); matDiffsT(N + 1 : end, :) * z(M + 1 : end) ];    
     opSqT = @(z) [sum(z(1 : M) ) / N + matDiffsSqT(1 : N, :) * z(M + 1 : end); matDiffsSqT(N + 1 : end, :) * z(M + 1 : end) ];
 else
-    op = [[varargin{1}, sparse(M, c - N)]; matDiffs]; 
-    opSq = op.^2;
-    opT = op.';
-    opSqT = opT.^2; 
+    op_ = [[varargin{1}, sparse(M, c - N)]; matDiffs]; 
+    op = @(z) op_ * z(:);
+
+    opSq_ = op_.^2;
+    opSq = @(z) opSq_ * z(:);
+
+    opT_ = op_.';
+    opT = @(z) opT_ * z(:);
+
+    opSqT_ = opT_.^2; 
+    opSqT = @(z) opSqT_ * z(:);
 end 
 
 L = M + l;

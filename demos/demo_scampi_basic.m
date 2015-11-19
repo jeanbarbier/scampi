@@ -1,7 +1,7 @@
 had = 1; % Do you want to use an Hadamard or a random measurement matrix?
 
 % set the path to the folder containing the images
-pathImages = '~/Desktop/scampi/images/';
+pathImages = '/images/';
 
 % choice of the image
 N = 512^2; % size of image (power of two with Hadamard operator)
@@ -60,7 +60,7 @@ if had
 else        
     % create the augmented operators for the cosparse TV analysis model with dual variables    
     F = randn(M, N) ./ sqrt(N); % random Gaussian operator
-    [op, opSq, opTr, opSqTr, l, ~, Ntot] = createAugmentedOp(N, subrate, ~, F);
+    [op, opSq, opTr, opSqTr, l, ~, Ntot] = createAugmentedOp(N, subrate, 1, F);
 
     % compressive linear measurement
     y = F * opt.signal;  
