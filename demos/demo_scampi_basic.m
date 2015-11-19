@@ -1,3 +1,5 @@
+had = 1; % Do you want to use an Hadamard or a random measurement matrix?
+
 % set the path to the folder containing the images
 pathImages = '~/Desktop/scampi/images/';
 
@@ -48,12 +50,21 @@ original_image = round(imresize(original_image, round(downscale * size(original_
 original_image = rescaleImage(original_image); % rescale image to have pixel values in [0,1]
 opt.signal = original_image(:);
 
-% create the augmented operators for the cosparse TV analysis model with dual variables
-[op, opSq, opTr, opSqTr, l, ~, Ntot, rp, ~, rp2, ~] = createAugmentedOp(1, N, subrate, 1);
+M = round(subrate * N); % number of lines of the original measurement matrix
+if had
+    % create the augmented operators for the cosparse TV analysis model with dual variables
+    [op, opSq, opTr, opSqTr, l, ~, Ntot, rp, ~, rp2] = createAugmentedOp(N, subrate, 1);
 
-% compressive linear measurement
-M = round(subrate * N);
-y = MultSeededHadamard(opt.signal, 1 / N, 1, 1, M, N, rp, [], rp2);                
+    % compressive linear measurement    
+    y = MultSeededHadamard(opt.signal, 1 / N, 1, 1, M, N, rp, [], rp2);          
+else        
+    % create the augmented operators for the cosparse TV analysis model with dual variables    
+    F = randn(M, N) ./ sqrt(N); % random Gaussian operator
+    [op, opSq, opTr, opSqTr, l, ~, Ntot] = createAugmentedOp(N, subrate, ~, F);
+
+    % compressive linear measurement
+    y = F * opt.signal;  
+end  
 
 % noise
 nvar = mean(y(y < max(abs(y) ) ).^2) * exp(-log(10) * isnr / 10); % noise variance (avoiding to take into account the measurement associated to the first Hadamard mode)

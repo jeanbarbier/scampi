@@ -4,7 +4,7 @@
 pathImages = '~/Desktop/scampi/images/';
 
 % choice of the image
-N = 32^2; % size of image (power of two with the present Hadamard operator)
+N = 512^2; % size of image (power of two with the present Hadamard operator)
 image_ = 'lena';
 
 % which algorithms do you want to run?
@@ -72,7 +72,7 @@ for i = 1 : numel(isnrTab)
                 for t = 1 : numSamples
 
                     % create the augmented operators for the cosparse TV analysis model with dual variables
-                    [op, opSq, opTr, opSqTr, l, ~, Ntot, rp, ~, rp2, ~] = createAugmentedOp(1, N, subrate, 1);
+                    [op, opSq, opTr, opSqTr, l, ~, Ntot, rp, ~, rp2] = createAugmentedOp(N, subrate, 1);
 
                     % compressive linear measurement
                     M = round(subrate * N);
@@ -153,10 +153,4 @@ for i = 1 : numel(isnrTab)
 end
 
 % plot the charts comparing scampi and grampa
-if scampi_ && grampa_
-    plotFigs_scampi_vs_grampa;
-elseif scampi_ && not(grampa_)
-    plotFigs_scampi;
-elseif not(scampi_) && grampa_
-    plotFigs_grampa;
-end
+plotFigs;
